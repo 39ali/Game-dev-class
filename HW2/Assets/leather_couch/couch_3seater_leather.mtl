@@ -1,0 +1,18 @@
+newmtl couch_3seater_leather_mat
+Ni 1.5
+Ka 0 0 0
+map_Ke couch_3seater_leather/couch_3seater_leather_mat_glow.png
+d 1
+Kd 0 0 0
+adobe_map_normal couch_3seater_leather/couch_3seater_leather_mat_normal.png
+map_d couch_3seater_leather/couch_3seater_leather_mat_opacity.png
+Tr 0
+illum 7
+Ks 1 1 1
+adobe_translucence 0.0
+adobe_map_roughness couch_3seater_leather/couch_3seater_leather_mat_roughness.png
+adobe_interior_color 1.0 1.0 1.0
+adobe_density 0.0
+map_Pm couch_3seater_leather/couch_3seater_leather_mat_metallic.png
+Ns 16
+map_Kd couch_3seater_leather/couch_3seater_leather_mat_baseColor.png
