@@ -1,1 +1,5 @@
-sceneSetups: []
+sceneSetups:
+- path: Assets/apartment-2-stories.unity
+  isLoaded: 1
+  isActive: 1
+  isSubScene: 0
