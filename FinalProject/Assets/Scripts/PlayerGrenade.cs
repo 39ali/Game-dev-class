@@ -16,7 +16,8 @@ public class PlayerGrenade : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        GunShooting p = this.GetComponent<GunShooting>();
+        if (Input.GetKeyDown(KeyCode.Q) && p.hasGrenade)
         {
             GameObject gren = Instantiate(grenadePrefab, hand.position, hand.rotation) as GameObject;
             gren.GetComponent<Rigidbody>().AddForce(hand.forward * throwFroce, ForceMode.Impulse);

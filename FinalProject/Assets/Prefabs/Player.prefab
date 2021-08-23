@@ -119,12 +119,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4950822786541733138}
-  m_LocalRotation: {x: -0.000000022829903, y: -0.000000007450581, z: 0.000000019156564, w: 1}
-  m_LocalPosition: {x: 0.65000033, y: 1.739, z: 2.2000008}
-  m_LocalScale: {x: 1, y: 0.33333328, z: 1}
+  m_LocalRotation: {x: -0, y: 0.76604444, z: 0.000000029802322, w: 0.64278764}
+  m_LocalPosition: {x: 0.12444776, y: 0.4409999, z: 0.007550316}
+  m_LocalScale: {x: 0.14285713, y: 0.1428571, z: 0.14285713}
   m_Children: []
-  m_Father: {fileID: 4950822787796933135}
-  m_RootOrder: 1
+  m_Father: {fileID: 4952589338769768048}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4950822786570242102
 GameObject:
@@ -5032,7 +5032,6 @@ Transform:
   m_LocalScale: {x: 1, y: 3, z: 1}
   m_Children:
   - {fileID: 4950822787993039739}
-  - {fileID: 4950822786541733137}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5241,6 +5240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GunInHand: {fileID: 4949544769076980116}
+  GrenadeInHand: {fileID: 0}
   aCamera: {fileID: 4950822787993039742}
   target: {fileID: 0}
   MuzzleEnd: {fileID: 4950822786541733138}

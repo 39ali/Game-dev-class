@@ -20,6 +20,24 @@ public class NpcLogic : MonoBehaviour
     public SphereCollider enemyRange;
 
 
+
+
+    //   public GameObject aCamera;
+    private LineRenderer lr;
+    public float shootingRange = 100;
+    public float shotDamage = 30;
+
+    [SerializeField]
+    public GameObject MuzzleEnd;
+    [SerializeField]
+    private AudioSource sound;
+    [SerializeField]
+    public ParticleSystem MuzzleFlash;
+
+
+    public GameLogicScript gameLogic;
+
+
     private NavMeshAgent navMeshAgent;
     private int currentIndex;
 
@@ -55,13 +73,17 @@ public class NpcLogic : MonoBehaviour
         state = NpcState.Patrolling;
         health = 100.0f;
 
+        lr = GetComponent<LineRenderer>();
+        sound = GunInHand.GetComponent<AudioSource>();
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
         //   if (gameObject.name.Contains("follower"))
-        //  Debug.Log("currentState: " + this.state);
+        // Debug.Log("currentState: " + this.state);
         if (state == NpcState.Killed)
         {
 
@@ -155,9 +177,13 @@ public class NpcLogic : MonoBehaviour
                     //gun
                     if (weaponChosen == 0)
                     {
-                        restAnimationState();
-                        npcAnim.SetBool("isShooting", true);
-                        ShootGun();
+                        if (state == NpcState.Attacking && prevState != state)
+                        {
+                            restAnimationState();
+                            npcAnim.SetBool("isShooting", true);
+                        }
+
+                        StartCoroutine(ShootGun());
                     }
                     else
                     {
@@ -208,7 +234,7 @@ public class NpcLogic : MonoBehaviour
 
             case NpcState.Killed:
                 {
-                    Debug.Log(gameObject.name + " was killed ");
+                    // Debug.Log(gameObject.name + " was killed ");
                     // play Animation isDead 
                     restAnimationState();
                     npcAnim.SetBool("isDead", true);
@@ -245,7 +271,7 @@ public class NpcLogic : MonoBehaviour
         npcAnim.SetBool("isWalking", true);
     }
 
-    bool EnemeyIsInRange()
+    GameObject EnemeyIsInRange()
     {
 
         float radius = enemyRange.radius;
@@ -260,27 +286,39 @@ public class NpcLogic : MonoBehaviour
             {
                 if (obj != null && obj == enemies[j])
                 {
-                    return true;
+
+                    NpcLogic npc = enemies[j].GetComponent<NpcLogic>();
+                    if (npc != null && !npc.isDead())
+                    {
+                        return obj;
+                    }
+
+                    GunShooting player = enemies[j].GetComponent<GunShooting>();
+                    if (player != null && !player.isDead())
+                    {
+                        return obj;
+                    }
+
+                    //return obj;
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
     public void TakeDamage(float n)
     {
-        Debug.Log(gameObject.name + "took damage : " + n);
         health -= n;
+        gameLogic.AddText(gameObject.name + " took " + n + "damage");
         if (health <= 0)
         {
             state = NpcState.Killed;
+            navMeshAgent.enabled = false;
+
+            gameLogic.AddText(gameObject.name + "got killed");
+
         }
-    }
-
-    void AttackPlayer()
-    {
-
     }
 
 
@@ -317,8 +355,62 @@ public class NpcLogic : MonoBehaviour
     }
 
 
-    void ShootGun()
+    IEnumerator ShootGun()
     {
 
+
+        yield return new WaitForSeconds(2f);
+
+
+        GameObject enemy = EnemeyIsInRange();
+
+
+        if (enemy)
+        {
+            navMeshAgent.SetDestination(this.transform.position);
+            transform.LookAt(enemy.transform);
+
+            RaycastHit hit;
+            if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, shootingRange))
+            {
+                 
+
+                NpcLogic npc = hit.transform.gameObject.GetComponent<NpcLogic>();
+                if (npc != null)
+                {
+                    Debug.Log(hit.transform.name + "was shot " + shotDamage);
+                    npc.TakeDamage(shotDamage);
+                }
+
+                GunShooting player = hit.transform.gameObject.GetComponent<GunShooting>();
+                if (player != null)
+                {
+                    Debug.Log(hit.transform.name + "was shot " + shotDamage);
+                    player.TakeDamage(shotDamage);
+                }
+
+            }
+        }
+
+    }
+
+
+    public IEnumerator ShowShot()
+    {
+        var ray = new Ray(this.transform.position, this.transform.forward);
+
+        lr.SetPosition(0, ray.origin);
+        lr.SetPosition(1, ray.GetPoint(shootingRange));
+        lr.enabled = true;
+        MuzzleFlash.Play();
+        sound.Play();
+        yield return new WaitForSeconds(0.1f);
+        lr.enabled = false;
+    }
+
+
+    public bool isDead()
+    {
+        return health <= 0;
     }
 }
