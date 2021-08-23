@@ -10,33 +10,54 @@ public class PickGun : MonoBehaviour
     {
         if (currentPlayer.tag == "Player")
         {
-            Debug.Log(gameObject.name + " was picked by Player");
-            gameObject.SetActive(false);
             if (gameObject.name.Contains("Gun"))
             {
-                currentPlayer.GetComponent<GunShooting>().SetGunActive(true);
+                bool wasPicked = currentPlayer.GetComponent<GunShooting>().SetGunActive(true);
+                if (!wasPicked)
+                {
+                    return;
+                }
             }
             else if (gameObject.name.Contains("m26"))
             {
-                currentPlayer.GetComponent<GunShooting>().SetGrenadeActive(true);
+
+                bool wasPicked = currentPlayer.GetComponent<GunShooting>().SetGrenadeActive(true);
+                if (!wasPicked)
+                {
+                    return;
+                }
             }
+            Debug.Log(gameObject.name + " was picked by Player");
+            gameObject.SetActive(false);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        //        Debug.Log("collider:" + other.tag);
+
         if (other.tag == "Npc") // only Player can pick coins
         {
-            this.gameObject.SetActive(false); // turn THIS off
-            npcMove npc = other.transform.gameObject.GetComponent<npcMove>();
+
+            NpcLogic npc = other.transform.gameObject.GetComponent<NpcLogic>();
             if (gameObject.name.Contains("Gun"))
             {
-                npc.SetGunActive(true);
+                bool wasPicked = npc.SetGunActive(true);
+                if (!wasPicked)
+                {
+                    return;
+                }
             }
             else if (gameObject.name.Contains("m26"))
             {
-                npc.SetGrenadeActive(true);
+                bool wasPicked = npc.SetGrenadeActive(true);
+                if (!wasPicked)
+                {
+                    return;
+                }
             }
+
+            this.gameObject.SetActive(false); // turn THIS off
         }
     }
 
@@ -52,3 +73,4 @@ public class PickGun : MonoBehaviour
         gameObject.transform.Rotate(0, _rotationSpeed * Time.deltaTime, 0);
     }
 }
+

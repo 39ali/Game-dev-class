@@ -19,12 +19,16 @@ public class GunShooting : MonoBehaviour
     [SerializeField]
     public GameObject Enemy;
     private float range = 500;
+
+    private bool hasGun = false;
+    private bool hasGrenade = false;
     //  private Vector3 dir = new Vector3(1);
     // Start is called before the first frame update
     void Start()
     {
         lr = GetComponent<LineRenderer>();
         sound = GunInHand.GetComponent<AudioSource>();
+        Screen.lockCursor = true;
     }
 
     // Update is called once per frame
@@ -52,10 +56,10 @@ public class GunShooting : MonoBehaviour
         //  Debug.Log(aCamera.transform.forward);
 
         var ray = new Ray(aCamera.transform.position, aCamera.transform.forward);
-        //  Debug.Log("print this:");
-        // D/ebug.Log(aCamera.transform.position);
-        // Debug.Log(aCamera.transform.forward);
-        //  Debug.Log( MuzzleEnd.transform.forward);
+        Debug.Log("print this:");
+        Debug.Log(aCamera.transform.position);
+        Debug.Log(aCamera.transform.forward);
+        Debug.Log(MuzzleEnd.transform.forward);
         lr.SetPosition(0, ray.origin);
         lr.SetPosition(1, ray.GetPoint(100));
         //   lr.SetPosition(1, MuzzleEnd.transform.position+ aCamera.transform.forward*range);
@@ -69,12 +73,24 @@ public class GunShooting : MonoBehaviour
     }
 
 
-    public void SetGunActive(bool g)
+    public bool SetGunActive(bool g)
     {
-        GunInHand.SetActive(g);
+        if (!hasGun)
+        {
+            GunInHand.SetActive(g);
+            hasGun = true;
+            return true;
+        }
+        return false;
     }
-    public void SetGrenadeActive(bool g)
+    public bool SetGrenadeActive(bool g)
     {
-        GrenadeInHand.SetActive(g);
+        if (!hasGrenade)
+        {
+            GrenadeInHand.SetActive(g);
+            hasGrenade = true;
+            return true;
+        }
+        return false;
     }
 }
