@@ -85,7 +85,7 @@ public class GameLogicScript : MonoBehaviour
         {
             //team 2 won 
             gameOverImage.SetActive(true);
-            gameOverText.text = "GameOver \n\n team2 won!";
+            gameOverText.text = "GameOver \n\n Your team won!";
             Cursor.lockState = CursorLockMode.None;
         }
 
@@ -93,7 +93,7 @@ public class GameLogicScript : MonoBehaviour
         {
             //team 1 won 
             gameOverImage.SetActive(true);
-            gameOverText.text = "GameOver \n\n team1 won!";
+            gameOverText.text = "GameOver \n\n NPC team won!";
             Cursor.lockState = CursorLockMode.None;
         }
 

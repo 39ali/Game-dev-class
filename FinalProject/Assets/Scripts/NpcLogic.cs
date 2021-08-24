@@ -25,7 +25,7 @@ public class NpcLogic : MonoBehaviour
     //   public GameObject aCamera;
     private LineRenderer lr;
     public float shootingRange = 100;
-    public float shotDamage = 30;
+    public float shotDamage = 15;
 
     [SerializeField]
     public GameObject MuzzleEnd;
@@ -49,6 +49,17 @@ public class NpcLogic : MonoBehaviour
 
     private GameObject currentLookableGun;
     private GameObject currentLookableGrenade;
+
+
+    private float shotTime = 0f;
+    private float grenadeTime = 0f;
+    private int chosenWeapon = 0;
+    private bool isAttacking = false;
+
+
+    public GameObject grenadePrefab;
+    public Transform hand;
+    public float throwFroce = 10f;
 
     enum NpcState
     {
@@ -174,19 +185,49 @@ public class NpcLogic : MonoBehaviour
                         weaponChosen = 0;
                     }
 
-                    //gun
-                    if (weaponChosen == 0)
+                    if (isAttacking)
                     {
-                        if (state == NpcState.Attacking && prevState != state)
-                        {
-                            restAnimationState();
-                            npcAnim.SetBool("isShooting", true);
-                        }
-
-                        StartCoroutine(ShootGun());
+                        weaponChosen = chosenWeapon;
                     }
                     else
                     {
+                        isAttacking = true;
+                        chosenWeapon = weaponChosen;
+                    }
+
+
+                    //gun
+                    if (weaponChosen == 0)
+                    {
+                        shotTime += Time.deltaTime;
+                        if (shotTime >= 1f || shotTime == 0)
+                        {
+                            restAnimationState();
+                            npcAnim.SetBool("isShooting", true);
+
+                            StartCoroutine(ShootGun());
+                            StartCoroutine(ShowShot());
+                            shotTime = 0f;
+                            isAttacking = false;
+                        }
+                        //if (state == NpcState.Attacking && prevState != state)
+
+                    }
+                    else // grenade 
+                    {
+                        grenadeTime += Time.deltaTime;
+                        if (grenadeTime >= 2.15f || grenadeTime == 0)
+                        {
+                            restAnimationState();
+                            npcAnim.SetBool("isThrowing", true);
+
+
+                            ThrowGrenade();
+
+
+                            grenadeTime = 0f;
+                            isAttacking = false;
+                        }
 
                     }
 
@@ -310,13 +351,13 @@ public class NpcLogic : MonoBehaviour
     public void TakeDamage(float n)
     {
         health -= n;
-        gameLogic.AddText(gameObject.name + " took " + n + "damage");
+        gameLogic.AddText(gameObject.name + " took " + n + " damage");
         if (health <= 0)
         {
             state = NpcState.Killed;
-            navMeshAgent.enabled = false;
+            navMeshAgent.SetDestination(this.transform.position);
 
-            gameLogic.AddText(gameObject.name + "got killed");
+            gameLogic.AddText(gameObject.name + " got killed");
 
         }
     }
@@ -355,12 +396,23 @@ public class NpcLogic : MonoBehaviour
     }
 
 
-    IEnumerator ShootGun()
+
+    void ThrowGrenade()
     {
 
+        GameObject enemy = EnemeyIsInRange();
+        if (enemy)
+        {
+            navMeshAgent.SetDestination(this.transform.position);
+            transform.LookAt(enemy.transform);
+            GameObject gren = Instantiate(grenadePrefab, hand.position, transform.rotation) as GameObject;
+            gren.GetComponent<Rigidbody>().AddForce(transform.forward * throwFroce, ForceMode.Impulse);
+        }
+    }
 
-        yield return new WaitForSeconds(2f);
 
+    IEnumerator ShootGun()
+    {
 
         GameObject enemy = EnemeyIsInRange();
 
@@ -373,25 +425,27 @@ public class NpcLogic : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, shootingRange))
             {
-                 
 
-                NpcLogic npc = hit.transform.gameObject.GetComponent<NpcLogic>();
-                if (npc != null)
+                if (hit.transform.gameObject == enemy)
                 {
-                    Debug.Log(hit.transform.name + "was shot " + shotDamage);
-                    npc.TakeDamage(shotDamage);
-                }
 
-                GunShooting player = hit.transform.gameObject.GetComponent<GunShooting>();
-                if (player != null)
-                {
-                    Debug.Log(hit.transform.name + "was shot " + shotDamage);
-                    player.TakeDamage(shotDamage);
-                }
+                    NpcLogic npc = hit.transform.gameObject.GetComponent<NpcLogic>();
+                    if (npc != null)
+                    {
+                        Debug.Log(hit.transform.name + "was shot " + shotDamage);
+                        npc.TakeDamage(shotDamage);
+                    }
 
+                    GunShooting player = hit.transform.gameObject.GetComponent<GunShooting>();
+                    if (player != null)
+                    {
+                        Debug.Log(hit.transform.name + "was shot " + shotDamage);
+                        player.TakeDamage(shotDamage);
+                    }
+                }
             }
         }
-
+        yield return new WaitForSeconds(0.1f);
     }
 
 

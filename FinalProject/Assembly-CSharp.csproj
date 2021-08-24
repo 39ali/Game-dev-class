@@ -57,6 +57,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\PlayerGrenadeScript.cs" />
      <Compile Include="Assets\CameraShakeFX\Scripts\StressReceiver.cs" />
+     <Compile Include="Assets\Scripts\GameLogicScript.cs" />
      <Compile Include="Assets\Scripts\DrawerMotion.cs" />
      <Compile Include="Assets\Scripts\Motion.cs" />
      <Compile Include="Assets\Scripts\NpcLogic.cs" />
@@ -71,7 +72,6 @@
      <Compile Include="Assets\Scripts\PlayerGrenade.cs" />
      <Compile Include="Assets\Scripts\GunShoot.cs" />
      <Compile Include="Assets\Scripts\NpcController.cs" />
-     <Compile Include="Assets\Scripts\GameLogicScript.cs" />
      <None Include="Assets\Crates00\info.txt" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/milhi/Videos/gamedev_class/Game-dev-class/FinalProject/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

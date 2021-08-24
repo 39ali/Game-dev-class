@@ -7,7 +7,7 @@ public class PlayerGrenadeScript : MonoBehaviour
     public float timeDelay = 2f;
     float startTimer;
     bool exploded = false;
-    public int damage = 100;
+    public int damage = 50;
     public float explosiveForce = 20f;
     public float explosiveRadius = 15f;
 
@@ -43,8 +43,14 @@ public class PlayerGrenadeScript : MonoBehaviour
             NpcLogic npc = coll[i].gameObject.GetComponent<NpcLogic>();
             if (npc != null)
             {
-
                 npc.TakeDamage(damage);
+                coll[i].gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosiveForce, transform.position, explosiveRadius);
+            }
+
+            GunShooting player = coll[i].gameObject.GetComponent<GunShooting>();
+            if (player != null)
+            {
+                player.TakeDamage(damage);
                 coll[i].gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosiveForce, transform.position, explosiveRadius);
             }
         }

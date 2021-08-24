@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PickGun : MonoBehaviour
 {
+    public GameLogicScript gameLogic;
     public GameObject currentPlayer;
     private int _rotationSpeed = 30;
     private void OnMouseDown()
@@ -27,7 +28,9 @@ public class PickGun : MonoBehaviour
                     return;
                 }
             }
-            Debug.Log(gameObject.name + " was picked by Player");
+
+            gameLogic.AddText(gameObject.name + " was picked by Player");
+            // Debug.Log(gameObject.name + " was picked by Player");
             gameObject.SetActive(false);
         }
     }
@@ -57,6 +60,7 @@ public class PickGun : MonoBehaviour
                 }
             }
 
+            gameLogic.AddText(gameObject.name + " was picked by " + other.transform.name);
             this.gameObject.SetActive(false); // turn THIS off
         }
     }

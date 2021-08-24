@@ -87,7 +87,7 @@ public class GunShooting : MonoBehaviour
 
     public void TakeDamage(float n)
     {
-        gameLogic.AddText(gameObject.name + " took " + n + "damage");
+        gameLogic.AddText(gameObject.name + " took " + n + " damage");
         health -= n;
 
         if (health <= 0)
