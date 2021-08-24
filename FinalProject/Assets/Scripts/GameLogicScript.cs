@@ -16,6 +16,7 @@ public class GameLogicScript : MonoBehaviour
     public GameObject gameOverImage;
     public Text gameOverText;
 
+    public GameObject youDiedText;
     // Start is called before the first frame update
     void Start()
     {
@@ -77,6 +78,7 @@ public class GameLogicScript : MonoBehaviour
 
         if (deadCount1 == team1.Length && deadCount2 == team2.Length)
         {
+            youDiedText.SetActive(false);
             gameOverImage.SetActive(true);
             gameOverText.text = "GameOver \n\n it's a tie!";
         }
@@ -84,6 +86,7 @@ public class GameLogicScript : MonoBehaviour
         if (deadCount1 == team1.Length)
         {
             //team 2 won 
+            youDiedText.SetActive(false);
             gameOverImage.SetActive(true);
             gameOverText.text = "GameOver \n\n Your team won!";
             Cursor.lockState = CursorLockMode.None;
@@ -92,6 +95,7 @@ public class GameLogicScript : MonoBehaviour
         if (deadCount2 == team2.Length)
         {
             //team 1 won 
+            youDiedText.SetActive(false);
             gameOverImage.SetActive(true);
             gameOverText.text = "GameOver \n\n NPC team won!";
             Cursor.lockState = CursorLockMode.None;

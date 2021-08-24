@@ -22,6 +22,8 @@ public class GunShooting : MonoBehaviour
     public float health = 100;
 
     public GameLogicScript gameLogic;
+
+    public GameObject youDiedText; 
     // Start is called before the first frame update
     void Start()
     {
@@ -40,11 +42,12 @@ public class GunShooting : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(MuzzleEnd.transform.position, MuzzleEnd.transform.forward, out hit, shootingRange))
             {
-                Debug.Log(hit.transform.name);
+    
 
                 NpcLogic npc = hit.transform.gameObject.GetComponent<NpcLogic>();
                 if (npc != null)
                 {
+                   // Debug.Log(hit.transform.gameObject.name);
                     npc.TakeDamage(shotDamage);
                 }
             }
@@ -93,6 +96,8 @@ public class GunShooting : MonoBehaviour
         if (health <= 0)
         {
             gameLogic.AddText(gameObject.name + " got killed");
+            youDiedText.SetActive(true);
+            GetComponent<CharacterController>().enabled = false;
         }
 
 

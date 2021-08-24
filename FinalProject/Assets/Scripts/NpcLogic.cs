@@ -351,13 +351,16 @@ public class NpcLogic : MonoBehaviour
     public void TakeDamage(float n)
     {
         health -= n;
+
+        Debug.Log(gameObject.name + " took " + n + " damage ,health is :" + health);
+
         gameLogic.AddText(gameObject.name + " took " + n + " damage");
         if (health <= 0)
         {
             state = NpcState.Killed;
             navMeshAgent.SetDestination(this.transform.position);
-
             gameLogic.AddText(gameObject.name + " got killed");
+            GetComponent<Collider>().enabled = false;
 
         }
     }
